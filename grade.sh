@@ -11,7 +11,7 @@
 
 # TODO LIST
 # Find makefile intelligently
-# Add unit test file
+# Add unit test file & support
 # Makefile generation
 # Suppress make output
 # File header comment checker
@@ -24,9 +24,10 @@
 # SETUP
 USERID=`whoami`
 BAR='=========='
-OPTSTRING=":fhldmM:"
+OPTSTRING=":fhldmM:E:"
 FLENS=true
 LLENS=true
+FEXT=(cpp)
 
 # TODO INTELLIGENTLY SET MAKEPATH
 MAKEPATH=/h/$USERID/comp11/ta/hw4_F2018/makefile
@@ -37,11 +38,12 @@ print_help () {
 	echo ""
 	echo "Options:"
 	echo "  -d            Run the default grading checks, including f, l, m"
+	echo "  -E \"EXT(s)\"   Specify file extensions for source code- will override defaults"
 	echo "  -f            Check function lengths"
 	echo "  -h            Prints help information"
 	echo "  -l            Check line lengths"
-	echo "  -m            Run make using the defualt location for the makefile"
 	echo "  -M [PATH]     Specify the path to the makefile to be used."
+	echo "  -m            Run make using the defualt location for the makefile"
 	exit 0
 }
 
@@ -63,17 +65,23 @@ calc_flens () {
 
 calc_llens () {
 	echo "$BAR COUNTING LINE LENGTHS $BAR"
-	LINE_LENGTHS=`wc -L * | sed 's/ //g'`
 
-	for LINE in $LINE_LENGTHS
+	for EXT in FEXT
 	do
-		LEN=`echo $LINE | tr -dc '0-9'`
-		FILENAME=`echo $LINE | sed "s/$LEN//"`
-		if [ "$LEN" -gt 80 ] && [ "$FILENAME" != "total" ] ; then
-			echo "Line greater than 80 columns!"
-			echo "$FILENAME has line of length $LEN!"
-			echo ""
-		fi
+		for FILE in ls *.$EXT
+		do
+		LINE_LENGTHS=`wc -L $FILE | sed 's/ //g'`
+			for LINE in $LINE_LENGTHS
+			do
+				LEN=`echo $LINE | tr -dc '0-9'`
+				FILENAME=`echo $LINE | sed "s/$LEN//"`
+				if [ "$LEN" -gt 80 ] && [ "$FILENAME" != "total" ] ; then
+					echo "Line greater than 80 columns!"
+					echo "$FILENAME has line of length $LEN!"
+					echo ""
+				fi
+			done
+		done
 	done
 }
 
@@ -85,47 +93,54 @@ makef () {
 }
 
 # EVAL FLAGS
+evaloptions () {
+	#Check Superseding flags
+	while getopts $OPTSTRING opt ; do
+		case $opt in
+		 M)
+			MAKEPATH=$OPTARG
+		 ;;
+		 E)
+			FEXT=$OPTARG
+		 ;;
+		 :)
+			echo "Option $OPTARG requires an argument!" >&2
+			exit 1
+		 ;;
+		esac
+	done
 
-#Check Superseding flags
-while getopts $OPTSTRING opt ; do
-	case $opt in
-	 M)
-		MAKEPATH=$OPTARG
-	 ;;
-	 \?)
-		continue
-	 ;;
-	esac
-done
+	OPTIND=1
 
-OPTIND=1
+	# Eval rest of flags
+	while getopts  $OPTSTRING opt ; do
+		case $opt in
+		 d)
+			calc_flens
+			calc_llens
+			makef
+			exit 1
+		 ;; 
+		 f)
+			calc_flens
+		 ;;
+		 h)
+			print_help
+		 ;;
+		 l)
+			calc_llens
+		 ;;
+		 m)
+			makef
+		 ;;
+		 \?)
+			echo "Flag -$OPTARG not recognized!" >&2
+			exit 1
+		 ;;
+		esac
+	done 
+}
 
-# Eval rest of flags
-while getopts  $OPTSTRING opt ; do
-	case $opt in
-	 d)
-		calc_flens
-		calc_llens
-		makef
-		exit 1
-	 ;; 
-	 f)
-		calc_flens
-		exit 1	
-	 ;;
-	 h)
-		print_help
-	 ;;
-	 l)
-		calc_llens
-		exit 1
-	 ;;
-	 m)
-		makef
-	 ;;
-	 \?)
-		echo "Flag -$OPTARG not recognized!"
-		exit 1
-	 ;;
-	esac
-done 
+evaloptions
+
+
