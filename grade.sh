@@ -27,7 +27,7 @@ BAR='=========='
 OPTSTRING=":fhldmM:E:"
 FLENS=true
 LLENS=true
-FEXT=(cpp)
+FEXT=(cpp txt text)
 
 # TODO INTELLIGENTLY SET MAKEPATH
 MAKEPATH=/h/$USERID/comp11/ta/hw4_F2018/makefile
