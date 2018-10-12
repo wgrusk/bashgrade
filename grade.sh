@@ -27,7 +27,7 @@ BAR='=========='
 OPTSTRING=":fhldmM:E:"
 FLENS=true
 LLENS=true
-FEXT=(cpp txt text)
+FEXT="cpp txt text"
 
 # TODO INTELLIGENTLY SET MAKEPATH
 MAKEPATH=/h/$USERID/comp11/ta/hw4_F2018/makefile
@@ -65,10 +65,9 @@ calc_flens () {
 
 calc_llens () {
 	echo "$BAR COUNTING LINE LENGTHS $BAR"
-
-	for EXT in FEXT
+	for EXT in $FEXT
 	do
-		for FILE in ls *.$EXT
+		for FILE in `ls *."$EXT"`
 		do
 		LINE_LENGTHS=`wc -L $FILE | sed 's/ //g'`
 			for LINE in $LINE_LENGTHS
