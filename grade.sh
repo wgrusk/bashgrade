@@ -93,54 +93,48 @@ makef () {
 }
 
 # EVAL FLAGS
-evaloptions () {
-	#Check Superseding flags
-	while getopts $OPTSTRING opt ; do
-		case $opt in
-		 M)
-			MAKEPATH=$OPTARG
-		 ;;
-		 E)
-			FEXT=$OPTARG
-		 ;;
-		 :)
-			echo "Option $OPTARG requires an argument!" >&2
-			exit 1
-		 ;;
-		esac
-	done
+#Check Superseding flags
+while getopts $OPTSTRING opt ; do
+	case $opt in
+	 M)
+		MAKEPATH=$OPTARG
+	 ;;
+	 E)
+		FEXT=$OPTARG
+	 ;;
+	 :)
+		echo "Option $OPTARG requires an argument!" >&2
+		exit 1
+	 ;;
+	esac
+done
 
-	OPTIND=1
+OPTIND=1
 
-	# Eval rest of flags
-	while getopts  $OPTSTRING opt ; do
-		case $opt in
-		 d)
-			calc_flens
-			calc_llens
-			makef
-			exit 1
-		 ;; 
-		 f)
-			calc_flens
-		 ;;
-		 h)
-			print_help
-		 ;;
-		 l)
-			calc_llens
-		 ;;
-		 m)
-			makef
-		 ;;
-		 \?)
-			echo "Flag -$OPTARG not recognized!" >&2
-			exit 1
-		 ;;
-		esac
-	done 
-}
-
-evaloptions
-
-
+# Eval rest of flags
+while getopts  $OPTSTRING opt ; do
+	case $opt in
+	 d)
+		calc_flens
+		calc_llens
+		makef
+		exit 1
+	 ;; 
+	 f)
+		calc_flens
+	 ;;
+	 h)
+		print_help
+	 ;;
+	 l)
+		calc_llens
+	 ;;
+	 m)
+		makef
+	 ;;
+	 \?)
+		echo "Flag -$OPTARG not recognized!" >&2
+		exit 1
+	 ;;
+	esac
+done 
