@@ -16,10 +16,8 @@
 # Suppress make output
 # File header comment checker
 # Function header checker
-# Calculate line length for source files only
 # Output total number of lines / functions greater than 80 col / 30 lines
 # Handle submissions with < 80 char lines and < 30 line fns (print something)
-# Make f l and m flags not end execution / mutually exclusive.
 
 # SETUP
 USERID=`whoami`
