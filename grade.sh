@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# grade.sh is a script written by COMP11 TA Will Rusk to sreamline grading 
-# assignments. 
+# grade.sh is a script written by COMP11 TA Will Rusk to sreamline grading
+# assignments.
 # USAGE:
-# grade.sh 
+# grade.sh
 #  run the script with default options, will try to guess location of makefile
-# 
+#
 # grade.sh -h
 #  Display information on flags / usage info
 
@@ -41,13 +41,13 @@ calc_flens () {
 
 	for FUNC in $FUNC_LENGTHS
 	do
-		LEN=`echo $FUNC | tr -dc '0-9'`  
+		LEN=`echo $FUNC | tr -dc '0-9'`
 		STRIP=`echo $FUNC | sed "s/$LEN/ /g"`
-		read -s FNAME FILENAME <<< $STRIP	
-		if [ "$LEN" -gt 30 ] ; then 
+		read -s FNAME FILENAME <<< $STRIP
+		if [ "$LEN" -gt 30 ] ; then
 			echo "Function $FNAME in file $FILENAME has a length of $LEN lines!"
 			echo ""
-		fi	
+		fi
 	done
 }
 
@@ -76,7 +76,7 @@ makef () {
 	echo 'Copying makefile'
 	cp  $MAKEPATH ./makefile
 	echo 'Starting make all:'
-	make all
+	make all > /dev/null
 }
 
 # EVAL FLAGS
@@ -106,7 +106,7 @@ while getopts  $OPTSTRING opt ; do
 		calc_llens
 		makef
 		exit 1
-	 ;; 
+	 ;;
 	 f)
 		calc_flens
 	 ;;
@@ -124,4 +124,4 @@ while getopts  $OPTSTRING opt ; do
 		exit 1
 	 ;;
 	esac
-done 
+done
